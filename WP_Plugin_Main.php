@@ -11,6 +11,8 @@ Author URI:  https://www.facebook.com/Grafritz
 
 define('CUSTOMER_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
 
+define('LINK_BOOTSTRAP_CSS', CUSTOMER_PLUGIN_DIR_PATH.'style/bootstrap/assets/dist/css/bootstrap.css');
+
 // Partie 1 : créer une table SQL custom
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Scripts/scripts-tables.php');
 register_activation_hook(__FILE__, 'createTableCustomer');
@@ -36,3 +38,6 @@ add_action( 'plugins_loaded', function () {
 add_action( 'plugins_loaded', function () {
 	SP_Plugin::get_instance();
 } );
+
+
+?>

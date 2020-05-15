@@ -12,8 +12,6 @@ class MesseMainClass
 	public function __construct() {
 		add_filter( 'set-screen-option', [ __CLASS__, 'set_screen_messe' ], 10, 3 );
 		add_action( 'admin_menu', [ $this, 'plugin_menu_messe' ] );
-
-		//add_shortcode( 'formDemandeDeMesse', 'formulaireMesse' );
 	}
 
 
@@ -24,12 +22,21 @@ class MesseMainClass
 	public function plugin_menu_messe() 
 	{
 		$hook = add_menu_page(
-			'Sitepoint WP_List_Table Example',
-			'Messe Demo Test',
-			'manage_options',
-			'wp_list_table_class_messe',// slug / Url : ?page=wp_list_table_class 
-			[ $this, 'plugin_settings_page_messe' ]
+			'Sitepoint WP_List_Table Example', //page title
+			'Messe Demo Test', //menu title
+			'manage_options', //capabilities
+			'page_list_demande', //menu slug
+			[ $this, 'get_page_list_demande' ] //function
 		);
+
+		//this is a submenu
+		add_submenu_page('page_list_demande', //parent slug
+			'Add New Messe', //page title
+			'Add New', //menu title
+			'manage_options', //capability
+			'messe_create', //menu slug
+			[ $this, 'get_form_create_messe']
+		); //function
 
 		add_action( "load-$hook", [ $this, 'screen_option_messe' ] );
 	}
@@ -37,7 +44,7 @@ class MesseMainClass
 	/**
 	 * Plugin settings page
 	 */
-	public function plugin_settings_page_messe() 
+	public function get_page_list_demande() 
 	{
 		?>
 		<div class="wrap">
@@ -77,6 +84,16 @@ class MesseMainClass
 		add_screen_option( $option, $args );
 
 		$this->messe_obj = new WP_DmdDeMesse();
+	}
+
+
+	public function get_form_create_messe()
+	{
+		ob_start();
+		include_once plugin_dir_path(__FILE__) .'views/frm_create_form.php';
+		$template = ob_get_contents();
+		ob_end_clean();
+		echo $template;
 	}
 
 	/** Singleton instance */

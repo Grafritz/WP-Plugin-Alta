@@ -8,6 +8,8 @@ define('CUST_COL_ADRESSE', 'address');
 define('CUST_COL_CITY', 'city');
 
 
+
+
 function createTableCustomer()
 {
     /**
