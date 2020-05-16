@@ -60,8 +60,13 @@ class WP_ListTable_DmdDeMesse extends WP_List_Table
 	 */
 	public function prepare_items() {
 
-		$this->_column_headers = $this->get_column_info();
-
+		//$this->_column_headers = $this->get_column_info();
+		$columns = $this->get_columns();
+        $hidden = $this->get_hidden_columns();
+        $sortable = $this->get_sortable_columns();
+        
+		$this->_column_headers = array($columns, $hidden, $sortable);
+		
 		/** Process bulk action */
 		$this->process_bulk_action();
 
@@ -129,6 +134,7 @@ class WP_ListTable_DmdDeMesse extends WP_List_Table
 			case 'offrande':
 			case 'typeMesse':
 			case 'typeMonnaie':
+			case 'dateEnreg':
 				return $item[ $column_name ];
 			//case 'action':
 			//	return ''.sprintf('<a href="?page=%s&action=%s&post_id=%s">Edit</a>', $_GET['page'], 'owt-edit', $item['id'])
@@ -138,11 +144,12 @@ class WP_ListTable_DmdDeMesse extends WP_List_Table
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
 		}
 	}
-	/**
-	 *  Associative array of columns
-	 *
-	 * @return array
-	 */
+
+    public function get_hidden_columns()
+    {
+        return array('ID','dateEnreg');
+	}
+	
 	function get_columns() {
 		$columns = [
 			'cb'      => '<input type="checkbox" />',
@@ -150,10 +157,11 @@ class WP_ListTable_DmdDeMesse extends WP_List_Table
 			'nom'    => __( 'Nom, Prenom', 'sp' ),
 			//'nomUser' => __( 'Nom User', 'sp' ),
 			'dateMesse'    => __( 'date Messe', 'sp' ),
-			'heureMesse' => __( 'heureMesse', 'sp' ),
+			'heureMesse' => __( 'heure Messe', 'sp' ),
 			'offrande' => __( 'offrande', 'sp' ),
-			'typeMesse' => __( 'typeMesse', 'sp' ),
-			'typeMonnaie' => __( 'typeMonnaie', 'sp' ),
+			'typeMesse' => __( 'type Messe', 'sp' ),
+			'typeMonnaie' => __( 'type Monnaie', 'sp' ),
+			'dateEnreg' => __( 'date Enreg', 'sp' ),
             //'action' => 'Actions'
 		];
 
