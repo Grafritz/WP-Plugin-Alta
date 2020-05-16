@@ -32,6 +32,8 @@ require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Customer/SP-PluginCust.php');
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Messes/WP_ListTable_DmdDeMesse.php');
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Messes/WP_Main_DmdDeMesse.php');
 
+require_once( CUSTOMER_PLUGIN_DIR_PATH . 'Tools/Tools.php' );
+
 
 add_action( 'plugins_loaded', function () {
 	WP_Main_DmdDeMesse::get_instance();
