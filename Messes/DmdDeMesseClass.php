@@ -134,15 +134,15 @@ class WP_DmdDeMesse extends WP_List_Table
 	 *
 	 * @return string
 	 */
-	function column_name( $item ) {
+	function column_nom( $item ) {
 
 		$delete_nonce = wp_create_nonce( 'sp_delete_customer' );
 
-		$title = '<strong>' . $item['name'] . '</strong>';
+		$title = '<strong>' . $item['nom'] . '</strong>';
 
 		$actions = [
-			'edit' => sprintf( '<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Edit</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item['ID'] ), $delete_nonce ),
-			'delete' => sprintf( '<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['ID'] ), $delete_nonce )
+			'edit' => sprintf( '<a href="?page=messe_create&id=%s">Edit</a>', absint( $item['ID'] ) ),
+			'delete' => sprintf( '<a href="?page=messe_create&action=del&id=%s">Delete</a>', absint( $item['ID'] ) )
 		];
 
 		return $title . $this->row_actions( $actions );

@@ -48,7 +48,9 @@ class MesseMainClass
 	{
 		?>
 		<div class="wrap">
-			<h2>Demande de Messe</h2>
+			<h1 class="wp-heading-inline">Demande de Messe</h1>
+			<a href="?page=messe_create" class="page-title-action">Add New</a>
+			<hr class="wp-header-end">
 
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-12">

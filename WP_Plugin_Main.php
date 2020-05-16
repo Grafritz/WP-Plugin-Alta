@@ -10,8 +10,14 @@ Author URI:  https://www.facebook.com/Grafritz
 // https://www.sitepoint.com/using-wp_list_table-to-create-wordpress-admin-tables/
 
 define('CUSTOMER_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
+/*$uri=str_replace('\\',';;',CUSTOMER_PLUGIN_DIR_PATH);
+echo $uri;
+$line = 'stuff\\\thing\doodad\\';
+$linearray = split('\\\\', $line, -1);
+$line = split('\\', CUSTOMER_PLUGIN_DIR_PATH);
+echo $line[1];*/
 
-define('LINK_BOOTSTRAP_CSS', CUSTOMER_PLUGIN_DIR_PATH.'style/bootstrap/assets/dist/css/bootstrap.css');
+define('LINK_BOOTSTRAP_CSS', WP_PLUGIN_URL.'/WP-Plugin-Alta/styles/bootstrap/assets/dist/css/bootstrap.css');
 
 // Partie 1 : créer une table SQL custom
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Scripts/scripts-tables.php');
