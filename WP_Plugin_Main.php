@@ -25,6 +25,7 @@ register_activation_hook(__FILE__, 'createTableDmdDeMesse');
 
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Messes/ShortCode/ViewsForms.php');
 add_shortcode( 'formDemandeDeMesse', 'formulaireMesse' ); 
+add_shortcode( 'formDemandeDeMesseV2', 'formulaireMesseV2' ); 
 
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Customer/wp-CustomerClass.php');
 require_once(CUSTOMER_PLUGIN_DIR_PATH . 'Customer/SP-PluginCust.php');
