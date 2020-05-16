@@ -4,7 +4,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class WP_DmdDeMesse extends WP_List_Table 
+class WP_ListTable_DmdDeMesse extends WP_List_Table 
 {    
 	/** Class constructor */
 	public function __construct() {
@@ -26,7 +26,7 @@ class WP_DmdDeMesse extends WP_List_Table
 	 *
 	 * @return mixed
 	 */
-	public static function get_customers( $per_page = 5, $page_number = 1 ) {
+	public static function get_list_table_data( $per_page = 5, $page_number = 1 ) {
 
 		global $wpdb;        
 		$search_term = isset($_POST['s'])?  trim($_POST['s']):'';  
@@ -42,6 +42,8 @@ class WP_DmdDeMesse extends WP_List_Table
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 			$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+		}else{
+			$sql .= ' ORDER BY ID DESC';
 		}
 
 		$sql .= " LIMIT $per_page";
@@ -53,6 +55,27 @@ class WP_DmdDeMesse extends WP_List_Table
 
 		return $result;
 	}
+	/**
+	 * Handles data query and filter, sorting, and pagination.
+	 */
+	public function prepare_items() {
+
+		$this->_column_headers = $this->get_column_info();
+
+		/** Process bulk action */
+		$this->process_bulk_action();
+
+		$per_page     = $this->get_items_per_page( 'dmd_de_messe_per_page', 10 );
+		$current_page = $this->get_pagenum();
+		$total_items  = self::record_count();
+
+		$this->set_pagination_args( [
+			'total_items' => $total_items, //WE have to calculate the total number of items
+			'per_page'    => $per_page //WE have to determine how many items to show on a page
+		] );
+
+		$this->items = self::get_list_table_data( $per_page, $current_page );
+	}
 
 
 	/**
@@ -63,7 +86,7 @@ class WP_DmdDeMesse extends WP_List_Table
 	public static function delete_customer( $id ) {
 		global $wpdb;
 
-		$wpdb->delete( TBL_DEMANDE_DE_MESSES,//"{$wpdb->prefix}customers",
+		$wpdb->delete( TBL_DEMANDE_DE_MESSES,
 			[ 'ID' => $id ],
 			[ '%d' ]
 		);
@@ -77,9 +100,7 @@ class WP_DmdDeMesse extends WP_List_Table
 	 */
 	public static function record_count() {
 		global $wpdb;
-
 		$sql = "SELECT COUNT(*) FROM ".TBL_DEMANDE_DE_MESSES;
-
 		return $wpdb->get_var( $sql );
 	}
 
@@ -100,6 +121,7 @@ class WP_DmdDeMesse extends WP_List_Table
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'ID':
 			case 'nom':
 			//case 'nomUser':
 			case 'dateMesse':
@@ -108,9 +130,34 @@ class WP_DmdDeMesse extends WP_List_Table
 			case 'typeMesse':
 			case 'typeMonnaie':
 				return $item[ $column_name ];
+			//case 'action':
+			//	return ''.sprintf('<a href="?page=%s&action=%s&post_id=%s">Edit</a>', $_GET['page'], 'owt-edit', $item['id'])
+			//	.' | '.sprintf('<a href="?page=%s&action=%s&post_id=%s">Delete</a>', $_GET['page'], 'owt-delete', $item['id']);
+			
 			default:
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
 		}
+	}
+	/**
+	 *  Associative array of columns
+	 *
+	 * @return array
+	 */
+	function get_columns() {
+		$columns = [
+			'cb'      => '<input type="checkbox" />',
+			'ID'    => __( 'ID', 'sp' ),
+			'nom'    => __( 'Nom, Prenom', 'sp' ),
+			//'nomUser' => __( 'Nom User', 'sp' ),
+			'dateMesse'    => __( 'date Messe', 'sp' ),
+			'heureMesse' => __( 'heureMesse', 'sp' ),
+			'offrande' => __( 'offrande', 'sp' ),
+			'typeMesse' => __( 'typeMesse', 'sp' ),
+			'typeMonnaie' => __( 'typeMonnaie', 'sp' ),
+            //'action' => 'Actions'
+		];
+
+		return $columns;
 	}
 
 	/**
@@ -136,7 +183,7 @@ class WP_DmdDeMesse extends WP_List_Table
 	 */
 	function column_nom( $item ) {
 
-		$delete_nonce = wp_create_nonce( 'sp_delete_customer' );
+		$delete_nonce = wp_create_nonce( 'sp_delete_DmdDeMesse' );
 
 		$title = '<strong>' . $item['nom'] . '</strong>';
 
@@ -149,25 +196,6 @@ class WP_DmdDeMesse extends WP_List_Table
 	}
 
 
-	/**
-	 *  Associative array of columns
-	 *
-	 * @return array
-	 */
-	function get_columns() {
-		$columns = [
-			'cb'      => '<input type="checkbox" />',
-			'nom'    => __( 'Nom, Prenom', 'sp' ),
-			//'nomUser' => __( 'Nom User', 'sp' ),
-			'dateMesse'    => __( 'date Messe', 'sp' ),
-			'heureMesse' => __( 'heureMesse', 'sp' ),
-			'offrande' => __( 'offrande', 'sp' ),
-			'typeMesse' => __( 'typeMesse', 'sp' ),
-			'typeMonnaie' => __( 'typeMonnaie', 'sp' ),
-		];
-
-		return $columns;
-	}
 
 
 	/**
@@ -177,9 +205,12 @@ class WP_DmdDeMesse extends WP_List_Table
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'nom' => array( 'nom', true ),
+			'ID' => array( 'ID', true ),
+			'nom' => array( 'nom', false ),
+			'dateMesse' => array( 'dateMesse', false ),
 			'offrande' => array( 'offrande', false ),
-			'typeMesse' => array( 'typeMesse', false )
+			'typeMesse' => array( 'typeMesse', false ),
+			'typeMonnaie' => array( 'typeMonnaie', false )
 		);
 
 		return $sortable_columns;
@@ -199,27 +230,6 @@ class WP_DmdDeMesse extends WP_List_Table
 	}
 
 
-	/**
-	 * Handles data query and filter, sorting, and pagination.
-	 */
-	public function prepare_items() {
-
-		$this->_column_headers = $this->get_column_info();
-
-		/** Process bulk action */
-		$this->process_bulk_action();
-
-		$per_page     = $this->get_items_per_page( 'customers_per_page', 5 );
-		$current_page = $this->get_pagenum();
-		$total_items  = self::record_count();
-
-		$this->set_pagination_args( [
-			'total_items' => $total_items, //WE have to calculate the total number of items
-			'per_page'    => $per_page //WE have to determine how many items to show on a page
-		] );
-
-		$this->items = self::get_customers( $per_page, $current_page );
-	}
 
 	public function process_bulk_action() {
 
@@ -229,7 +239,7 @@ class WP_DmdDeMesse extends WP_List_Table
 			// In our file that handles the request, verify the nonce.
 			$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 
-			if ( ! wp_verify_nonce( $nonce, 'sp_delete_customer' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'sp_delete_DmdDeMesse' ) ) {
 				die( 'Go get a life script kiddies' );
 			}
 			else {

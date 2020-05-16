@@ -1,5 +1,5 @@
    <?php
-    //print_r(LINK_BOOTSTRAP_CSS);
+    //print_r(LINK_CURRENT_PLUGIN);
     $id = 0;
     $txtcodePers = $_POST["txtcodePers"];
     $txtnom = $_POST["txtnom"];
@@ -39,8 +39,9 @@
         );
         $message .= "Data inserted " . $txtnom;
     } else if (isset($_POST['btnUpdate'])) {
-       
-        $wpdb->update(TBL_DEMANDE_DE_MESSES, //table
+
+        $wpdb->update(
+            TBL_DEMANDE_DE_MESSES, //table
             array(
                 'codePers' => $txtcodePers,
                 'nom' => $txtnom,
@@ -57,13 +58,12 @@
             //array('%s') //where format		
         );
         $message .= "Data Update " . $txtnom;
-
     } else if (isset($_POST['btnDelete'])) {
         //$wpdb->query($wpdb->prepare("DELETE FROM '.TBL_DEMANDE_DE_MESSES.' WHERE ID=%s", $id));
-        wp_redirect( esc_url_raw('?page=messe_create') );
+        wp_redirect(esc_url_raw('?page=messe_create'));
         exit;
     } else {
-        $items = $wpdb->get_results($wpdb->prepare('SELECT * FROM '.TBL_DEMANDE_DE_MESSES.' WHERE ID=%s', $id));
+        $items = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . TBL_DEMANDE_DE_MESSES . ' WHERE ID=%s', $id));
 
         foreach ($items as $s) {
             $id = $s->ID;
@@ -79,19 +79,164 @@
         }
     }
     ?>
+
+   <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' type='text/css'>
+   <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Raleway:300,200,100' type='text/css'>
+
+   <link rel="stylesheet" href="<?php echo LINK_CURRENT_PLUGIN; ?>/styles/bootstrap/assets/dist/css/bootstrap.css">
+
+   <!-- Bootstrap core CSS -->
+   <!--<link rel="stylesheet" href="js/bootstrap/dist/css/bootstrap.css" >-->
+   <link rel="stylesheet" type="text/css" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.switch/bootstrap-switch.css" />
+   <link rel="stylesheet" type="text/css" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.datetimepicker/css/bootstrap-datetimepicker.min.css" />
+   <link rel="stylesheet" type="text/css" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.select2/select2.css" />
+   <!--<link rel="stylesheet" type="text/css" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.slider/css/slider.css" />-->
+
+   <link rel="stylesheet" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/css/styleCopy.css" />
+   <link rel="stylesheet" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/fonts/font-awesome-4/css/font-awesome.min.css">
+   <link rel="stylesheet" href="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/css/pygments.css">
+
+   <!--
+   <div id="cl-wrapper">
+       <div class="container-fluid" id="pcont">
+           <div class="page-head">
+               <h2>Form Validation</h2>
+           </div>
+
+           <div class="cl-mcont">
+               <?php if (isset($message)) : ?>
+                   <div class="alert alert-success">
+                       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                       <i class="fa fa-check sign"></i><strong>Success!</strong> Changes has been saved successfully!
+                   </div>
+                   <div class="updated">
+                       <p><?php echo $message; ?></p>
+                   </div><?php endif; ?>
+               <div class="row">
+                   <div class="col-sm-6 col-md-6">
+                       <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" parsley-validate novalidate>
+                           <div class="form-group">
+
+                               <div class="col-xs-3">
+                                   <label for="txtcodePers">codePers</label>
+                                   <input type="text" id="txtcodePers" name="txtcodePers" parsley-trigger="change" required placeholder="codePers" class="form-control" value="<?php echo $txtcodePers; ?>">
+                               </div>
+
+                               <div class="col-xs-3">
+                                   <label for="txtnom">Nom</label>
+                                   <input type="text" id="txtnom" name="txtnom" parsley-trigger="change" required placeholder="nom" class="form-control" value="<?php echo $txtnom; ?>">
+                               </div>
+
+                               <div class="col-md-3">
+                                   <label for="txtdateMesse">dateMesse</label>
+                                   <input type="date" id="txtdateMesse" name="txtdateMesse" parsley-trigger="change" required placeholder="dateMesse" class="form-control" value="<?php echo $txtdateMesse; ?>">
+                               </div>
+                           </div>
+
+                           <div class="form-group">
+
+                               <div class="col-sm-4">
+                                   <label for="txtheureMesse">heureMesse</label>
+                                   <input type="time" id="txtheureMesse" name="txtheureMesse" placeholder="heureMesse" class="form-control" value="<?php echo $txtheureMesse; ?>">
+                               </div>
+
+                               <div class="col-sm-4">
+                                   <label for="txtphonePers">phonePers</label>
+                                   <input type="tel" id="txtphonePers" name="txtphonePers" placeholder="phonePers" class="form-control" value="<?php echo $txtphonePers; ?>">
+                               </div>
+
+                               <div class="col-sm-4">
+                                   <label for="txtoffrande">offrande</label>
+                                   <input type="number" id="txtoffrande" name="txtoffrande" parsley-trigger="change" required placeholder="offrande" class="form-control" value="<?php echo $txtoffrande; ?>">
+                               </div>
+
+                               <div class="col-sm-4">
+                                   <label for="txtadressePers">adressePers</label>
+                                   <input type="text" id="txtadressePers" name="txtadressePers" placeholder="adressePers" class="form-control" value="<?php echo $txtadressePers; ?>">
+                               </div>
+
+                               <div class="col-sm-4">
+                                   <label for="txttypeMesse">typeMesse</label>
+                                   <input type="text" id="txttypeMesse" name="txttypeMesse" parsley-trigger="change" required placeholder="typeMesse" class="form-control" value="<?php echo $txttypeMesse; ?>">
+                               </div>
+
+                               <div class="col-sm-4">
+                                   <label for="txttypeMonnaie">typeMonnaie</label>
+                                   <input type="text" id="txttypeMonnaie" name="txttypeMonnaie" placeholder="typeMonnaie" class="form-control" value="<?php echo $txttypeMonnaie; ?>">
+                               </div>
+
+                           </div>
+
+                           <div class="form-group">
+                               <label>User Name</label>
+                               <input type="text" name="nick" parsley-trigger="change" required placeholder="Enter user name" class="form-control">
+                           </div>
+                           <div class="form-group">
+                               <label>Email address</label> <input type="email" name="email" parsley-trigger="change" required placeholder="Enter email" class="form-control">
+                           </div>
+                           <div class="form-group">
+                               <label>Password</label> <input id="pass1" type="password" placeholder="Password" required class="form-control">
+                           </div>
+                           <div class="form-group">
+                               <label>Repeat Password</label> <input parsley-equalto="#pass1" type="password" required placeholder="Password" class="form-control">
+                           </div>
+
+                           <?php if ($id <= 0) { ?>
+                               <button type="submit" name="btnEnregistrer" id="btnEnregistrer" class="button button-primary button-large">
+                                   Enregistrer
+                               </button>
+                           <?php } else if (isset($_GET['action']) && $_GET['action'] === 'del') { ?>
+
+                               <button type="submit" name="btnDelete" id="btnDelete" class="btn btn-danger button-large">
+                                   Supprimer
+                               </button>
+                           <?php } else { ?>
+                               <button type="submit" name="btnUpdate" id="btnUpdate" class="btn btn-primary button-large">
+                                   Mettre a jour
+                               </button>
+                           <?php } ?>
+                           <button class="btn btn-default">Cancel</button>
+                       </form>
+
+                   </div>
+               </div>
+               <div class="clear"></div>
+           </div>
+           <div class="clear"></div>
+       </div>
+       <div class="clear"></div>
+   </div>-->
+
+
+
    <div class="wrap">
-       <link type="text/css" href="<?php echo WP_PLUGIN_URL; ?>/WP-Plugin-Alta/styles/bootstrap/assets/dist/css/bootstrap.css" rel="stylesheet" />
+       <link type="text/css" href="<?php echo LINK_CURRENT_PLUGIN; ?>/styles/bootstrap/assets/dist/css/bootstrap.css" rel="stylesheet" />
 
        <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
            <div id="poststuff">
                <div id="post-body" class="metabox-holder columns-2">
 
                    <div id="post-body-content" style="position: relative;">
-                       <h1 class="">Nouvelle Demande de messe</h1>
+                       <div class="page-head" style="padding:0px;">
+                           <h1 class="">
+                               <?php if ($id <= 0) { ?>
+                                   Nouvelle
+                               <?php } else if (isset($_GET['action']) && $_GET['action'] === 'del') { ?>
+                                   Supprimer
+                               <?php } else { ?>
+                                   Modifier
+                               <?php } ?>
+                               Demande de messe</h1>
+                       </div>
                        <?php if (isset($message)) : ?>
+                           <div class="alert alert-success">
+                               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                               <i class="fa fa-check sign"></i><strong>Success!</strong> Changes has been saved successfully!
+                           </div>
                            <div class="updated">
                                <p><?php echo $message; ?></p>
                            </div><?php endif; ?>
+
 
                        <div class="box-body">
 
@@ -99,56 +244,50 @@
 
                                <div class="col-sm-4">
                                    <label for="txtcodePers">codePers</label>
-                                   <input type="text" id="txtcodePers" name="txtcodePers" class="teststyle form-control" placeholder="codePers"
-                                   value="<?php echo $txtcodePers; ?>" >
+                                   <input type="text" id="txtcodePers" name="txtcodePers" parsley-trigger="change" required class="teststyle form-control" placeholder="codePers" value="<?php echo $txtcodePers; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtnom">Nom</label>
-                                   <input type="text" id="txtnom" name="txtnom" placeholder="nom" class="form-control"
-                                   value="<?php echo $txtnom; ?>" >
+                                   <input type="text" id="txtnom" name="txtnom" parsley-trigger="change" required placeholder="nom" class="form-control" value="<?php echo $txtnom; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtdateMesse">dateMesse</label>
-                                   <input type="date" id="txtdateMesse" name="txtdateMesse" placeholder="dateMesse" class="form-control"
-                                   value="<?php echo $txtdateMesse; ?>" >
+                                   <input type="date" id="txtdateMesse" name="txtdateMesse" parsley-trigger="change" required placeholder="dateMesse" class="form-control" value="<?php echo $txtdateMesse; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtheureMesse">heureMesse</label>
-                                   <input type="time" id="txtheureMesse" name="txtheureMesse" placeholder="heureMesse" class="form-control"
-                                   value="<?php echo $txtheureMesse; ?>" >
+                                   <input type="time" id="txtheureMesse" name="txtheureMesse" parsley-trigger="change" required placeholder="heureMesse" class="form-control" value="<?php echo $txtheureMesse; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtphonePers">phonePers</label>
-                                   <input type="tel" id="txtphonePers" name="txtphonePers" placeholder="phonePers" class="form-control"
-                                   value="<?php echo $txtphonePers; ?>" >
+                                   <input type="tel" id="txtphonePers" name="txtphonePers" placeholder="phonePers" class="form-control" value="<?php echo $txtphonePers; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtoffrande">offrande</label>
-                                   <input type="number" id="txtoffrande" name="txtoffrande" placeholder="offrande" class="form-control"
-                                   value="<?php echo $txtoffrande; ?>" >
+                                   <input type="number" id="txtoffrande" name="txtoffrande" parsley-trigger="change" required placeholder="offrande" class="form-control" value="<?php echo $txtoffrande; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txtadressePers">adressePers</label>
-                                   <input type="text" id="txtadressePers" name="txtadressePers" placeholder="adressePers" class="form-control"
-                                   value="<?php echo $txtadressePers; ?>" >
+                                   <input type="text" id="txtadressePers" name="txtadressePers" placeholder="adressePers" class="form-control" value="<?php echo $txtadressePers; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txttypeMesse">typeMesse</label>
-                                   <input type="text" id="txttypeMesse" name="txttypeMesse" placeholder="typeMesse" class="form-control"
-                                   value="<?php echo $txttypeMesse; ?>" >
+                                   <input type="text" id="txttypeMesse" name="txttypeMesse" parsley-trigger="change" required placeholder="typeMesse" class="form-control" value="<?php echo $txttypeMesse; ?>">
                                </div>
 
                                <div class="col-sm-4">
                                    <label for="txttypeMonnaie">typeMonnaie</label>
-                                   <input type="text" id="txttypeMonnaie" name="txttypeMonnaie" placeholder="typeMonnaie" class="form-control"
-                                   value="<?php echo $txttypeMonnaie; ?>" >
+                                   <select id="txttypeMonnaie" name="txttypeMonnaie" parsley-trigger="change" required class="form-control">
+                                       <option value="HT" <?php echo ($txttypeMonnaie == '$HT' || $txttypeMonnaie == 'HT') ? 'selected="selected"' : '' ?>>HT</option>
+                                       <option value="US" <?php echo ($txttypeMonnaie == '$US' || $txttypeMonnaie == 'US') ? 'selected="selected"' : '' ?>>US</option>
+                                   </select>
                                </div>
 
                            </div>
@@ -167,13 +306,7 @@
                                    <div class="submitbox" id="submitpost">
 
                                        <div id="minor-publishing">
-                                           <div id="minor-publishing-actions">
-                                               <!--<div id="save-action">
-                                                <input type="submit" name="save" id="save-post" value="Enregistrer le brouillon" class="button">
-                                                <span class="spinner"></span>
-                                            </div>-->
-                                               <div class="clear"></div>
-                                           </div>
+
                                            <div id="misc-publishing-actions"></div>
                                            <div class="clear"></div>
                                        </div>
@@ -190,12 +323,12 @@
                                                    <button type="submit" name="btnEnregistrer" id="btnEnregistrer" class="button button-primary button-large">
                                                        Enregistrer
                                                    </button>
-                                               <?php } else if( isset($_GET['action']) && $_GET['action']==='del' ){ ?>
+                                               <?php } else if (isset($_GET['action']) && $_GET['action'] === 'del') { ?>
 
                                                    <button type="submit" name="btnDelete" id="btnDelete" class="btn btn-danger button-large">
                                                        Supprimer
                                                    </button>
-                                                <?php }else{ ?>
+                                               <?php } else { ?>
                                                    <button type="submit" name="btnUpdate" id="btnUpdate" class="button button-primary button-large">
                                                        Mettre a jour
                                                    </button>
@@ -216,3 +349,59 @@
            </div>
        </form>
    </div>
+
+   <div style="clear: both;"></div>
+   <div class="clear"></div>
+
+
+   <script src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.js"></script>
+   <script src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.select2/select2.min.js" type="text/javascript"></script>
+   <script src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.parsley/parsley.js" type="text/javascript"></script>
+   <script src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.nestable/jquery.nestable.js"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/behaviour/general.js"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/jquery.ui/jquery-ui.js"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.switch/bootstrap-switch.min.js"></script>
+   <script type="text/javascript" src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+   <script type="text/javascript">
+       $(document).ready(function() {
+           //initialize the javascript
+           //App.init();
+       });
+   </script>
+   <!-- Bootstrap core JavaScript
+  ================================================== -->
+   <!-- Placed at the end of the document so the pages load faster -->
+   <!--<script src="js/behaviour/voice-commands.js"></script> -->
+   <!--<script src="<?php echo LINK_CURRENT_PLUGIN; ?>styles/CleanZone/js/bootstrap/dist/js/bootstrap.min.js"></script>-->
+
+   <style>
+       .col-xs-1,
+       .col-xs-2,
+       .col-xs-3,
+       .col-xs-4,
+       .col-xs-5,
+       .col-xs-6,
+       .col-xs-7,
+       .col-xs-8,
+       .col-xs-9,
+       .col-xs-10,
+       .col-xs-11,
+       .col-xs-12,
+       .col-sm-1,
+       .col-sm-2,
+       .col-sm-3,
+       .col-sm-4,
+       .col-sm-5,
+       .col-sm-6,
+       .col-sm-7,
+       .col-sm-8,
+       .col-sm-9,
+       .col-sm-10,
+       .col-sm-11,
+       .col-sm-12 {
+           float: left;
+       }
+   </style>

@@ -1,6 +1,6 @@
 <?php
 
-class MesseMainClass
+class WP_Main_DmdDeMesse
 {
 	// class instance
 	static $instance;
@@ -78,14 +78,14 @@ class MesseMainClass
 	public function screen_option_messe() {
 		$option = 'per_page';
 		$args   = [
-			'label'   => 'Messe',
-			'default' => 5,
-			'option'  => 'messe_per_page'
+			'label'   => 'Messes',
+			'default' => 10,
+			'option'  => 'dmd_de_messe_per_page'
 		];
 
 		add_screen_option( $option, $args );
 
-		$this->messe_obj = new WP_DmdDeMesse();
+		$this->messe_obj = new WP_ListTable_DmdDeMesse();
 	}
 
 
